@@ -1,0 +1,22 @@
+#!/bin/bash
+# select files from menu to move or copy them.
+# requires 'fzf' and utilizes 'fd'(can be replaced with 'find')
+# call with 
+# 	$ ft cp / $ ft mv
+
+ftransfer() {
+  local cmd=$1
+  shift
+  local opts=("$@")
+
+  local files target
+
+  mapfile -t files < <(fd . -tf | fzf -m --prompt="select files with TAB :") || return
+
+  target=$(find ~ -type d 2>/dev/null | fzf --prompt="pick directory: ") || return
+
+  "$cmd" "${opts[@]}" "${files[@]}" "$target"
+}
+
+ftransfer "$@"
+

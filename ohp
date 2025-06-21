@@ -1,0 +1,7 @@
+#!/bin/bash
+# same as 'op' but starts search in ~ directory
+
+file=$(find "$HOME" -type f \
+       -not -path "$HOME/.cache/*" \
+	2>/dev/null  |fzf)
+[[ -n "$file" ]] && xdg-open "$file"

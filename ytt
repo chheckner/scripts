@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# lets you download a part of a video
+# lets you select audio-only
+# requires yt-dlp and ffmpeg
+#
+# might have to change the name of download directory, since it might depend on language setting,
+# if the 'D' in Downloads is in capital letters or not.
+
+downtrim(){
+    echo "Please insert URL: "
+    read URL
+
+    if [[ $URL =~ ^https?:// ]]; then
+        echo "valid URL"
+    else
+        echo "not a valid URL"
+        exit 1
+    fi
+
+    echo 'video starts at: ? (in 00:00:00 Format)'
+    read start
+
+    echo 'video ends at: ? (in 00:00:00 Format)'
+    read end
+
+    echo 'name the output file (no file-endings like mp4 etc.)'
+    read output_name
+
+    echo 'audio only? (y/n)'
+    read audio_only
+
+    if ! command -v yt-dlp &> /dev/null; then
+        echo "yt-dlp is not installed, please install it."
+        exit 1
+    fi
+    if ! command -v ffmpeg &> /dev/null; then
+        echo "ffmpeg is not installed, please install it"
+        exit 1
+    fi
+
+    # Path to downloads directory
+    download_dir=~/Downloads
+
+    if [[ "$audio_only" == "y" ]]; then
+        echo "audio will be downloaded..."
+
+        audio_url=$(yt-dlp -f bestaudio -g "$URL")
+        ffmpeg -ss "$start" -to "$end" -i "$audio_url" -c copy "${download_dir}/${output_name}.mp3"
+
+        echo "the audio was downloaded and saved as ${download_dir}/${output_name}.mp3"
+    else
+        echo "Video and audio will be downloaded"
+
+        video_url=$(yt-dlp -f bestvideo -g "$URL")
+        audio_url=$(yt-dlp -f bestaudio -g "$URL")
+        ffmpeg -ss "$start" -to "$end" -i "$video_url" -ss "$start" -to "$end" -i "$audio_url" -c copy "${download_dir}/${output_name}.mp4"
+
+        echo "video was downloaded and saved as ${download_dir}/${output_name}.mp4"
+    fi
+}
+
+# call function
+downtrim
+

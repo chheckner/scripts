@@ -1,0 +1,5 @@
+#!/bin/bash
+# simple one-liner, gives menu of all man-pages, lets user select and displays selection as pdf in zathura
+# requires zathura and fzf
+
+man -k . | fzf | cut -d " " -f1 | xargs -r man -Tpdf | zathura -

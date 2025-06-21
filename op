@@ -1,0 +1,8 @@
+#!/bin/bash
+# select files in current directory/sub-directories from menu and open them in default application
+# requires fzf
+
+file=$(find "$PWD" -type f \
+	-not -path "$HOME/.cache/*" \
+	2>/dev/null | fzf)
+[[ -n "$file" ]] && xdg-open "$file"
