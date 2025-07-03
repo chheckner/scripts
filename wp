@@ -1,6 +1,7 @@
 #!/bin/bash
 # opens all image files from selected sub-directories of ~/Bilder
 # for other language settings, you need to change the name of "Bilder" to "Pictures" or whatever it might be.
+# you might also want to add image filetypes like CR2 or whatever you need.
 
 dir=$(fd . -td "$HOME/Bilder/" | fzf) || return
 sxiv "$dir"/*.jpg "$dir"/*png "$dir"/.jpeg
