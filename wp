@@ -1,0 +1,3 @@
+#!/bin/bash
+dir=$(fd . -td "$HOME/Bilder/" | fzf) || return
+sxiv "$dir"/*.jpg "$dir"/*png "$dir"/.jpeg
